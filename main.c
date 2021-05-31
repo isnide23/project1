@@ -1,4 +1,10 @@
 /*Solar Systerm App main.c */
-int main(int argc, char *argv[]) {
+/*Author: Ian Snyder */
+#include <stdio.h>
 
+int main(int argc, char *argv[]) {
+   printf("Hello, World!\n");
+   return 0;
 }
+
+
