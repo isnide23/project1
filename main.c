@@ -3,12 +3,18 @@
 #include <stdio.h>
 #include <string.h>
 
+void printGreeting() {
+    printf("Welcome to the Solar System!\n");
+    printf("There are eight planets and one dwarf planet to explore.\n");
+}
+
 int main(int argc, char *argv[]) {
     char name[100];
     char answer[100];
 
-    printf("Welcome to the Solar System!\n");
-    printf("There are eight planets and one dwarf planet to explore.\n");
+    printGreeting();
+    // printf("Welcome to the Solar System!\n");
+    // printf("There are eight planets and one dwarf planet to explore.\n");
     printf("What is your name?\n");
     scanf("%s", name );
     printf( "Hello %s, lets explore!\n", name);
