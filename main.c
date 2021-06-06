@@ -1,7 +1,9 @@
 /*Solar Systerm App main.c */
 /*Author: Ian Snyder */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "./cJSON.h"
 #include "./cJSON.c"
 
@@ -29,19 +31,32 @@ void askRandomQuestion() {
     scanf("%s", answer);
 }
 
-void askWhichPlanet() {
+void askWhichPlanet(Planet *node) {
     printf("Which planet would you like to visit? (Ex: Jupiter)\n");
-    scanf("%s", planet);   
-}
-
-void print_planets(Planet *node) {
-    while (node != NULL) {
-        printf("%s, %s\n", node->name, node->description);
+    scanf("%s", planet);
+    Planet *head = node;
+    for (int i = 0; i < planet_count; i++) {
+        if (strcmp(planet, node->name) == 0) {
+            printf("Welcome to %s! %s\n", node->name, node->description);
+            return;
+        }
         node = node->next;
     }
+    printf("Invalid planet, try again.\n");
+    askWhichPlanet(head);
+
+
 }
 
-Planet* create_planets(char* file)
+void randomPlanet(Planet *node) {
+    int random_num = (rand() % planet_count);
+    for (int i = 0; i < random_num; i++) {
+        node = node->next;
+    }
+    printf("Welcome to %s! %s\n", node->name, node->description);
+}
+
+Planet* createPlanets(char* file)
 {
     cJSON *root = cJSON_Parse(file);
     char *solar_system = cJSON_GetObjectItem(root, "name")->valuestring;
@@ -74,12 +89,15 @@ Planet* create_planets(char* file)
  
     // free memory
     cJSON_Delete(root);
-    // print_planets(head);
     return head;
 }
 
 
 int main(int argc, char *argv[]) {
+
+    // initialize rand number
+    time_t t;
+    srand((unsigned) time(&t));
 
     // open file
     FILE *fp = fopen("planetarySystem.json", "r");
@@ -97,19 +115,17 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    create_planets(buffer);
-
-
+    Planet *list = createPlanets(buffer);
     printGreeting();
     askRandomQuestion();
 
     for (;;) {
         if (strcmp(answer, "N") == 0) {
             printf("Name a planet to visit.\n");
-            askWhichPlanet();
+            askWhichPlanet(list);
             break;
         } else if(strcmp(answer, "Y") == 0) {
-            printf("Saturn is a dope planet with rings.\n");
+            randomPlanet(list);
             break;
         } else {
             printf("Invalid response.\n");
